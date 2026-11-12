@@ -23,7 +23,10 @@ async def main() -> None:
     # One shared client with trust_env=False: localhost must bypass any
     # system proxy vars (httpx otherwise chokes parsing NO_PROXY entries
     # in sandboxed shells). Same gotcha as PLAN.md notes for Day 1.
-    async with httpx.AsyncClient(trust_env=False) as httpx_client:
+    # Long timeout: the default httpx 5s is far too short — a live job
+    # search with retries takes 10-60s. The Coordinator (Day 4) needs
+    # the same treatment.
+    async with httpx.AsyncClient(trust_env=False, timeout=300.0) as httpx_client:
         resolver = A2ACardResolver(httpx_client=httpx_client, base_url=BASE_URL)
         card = await resolver.get_agent_card()
 

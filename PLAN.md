@@ -62,6 +62,15 @@ Ports: Scout 10001, Scribe 10002, Coordinator 8000, UI 5173.
   Install `a2a-sdk[http-server]==1.3.0` with no protobuf pin.
 - `httpx.AsyncClient` picks up system proxy vars; for localhost work use
   `trust_env=False` (see `echo_client.py`).
+- Day 2 (12 Nov 2026): Scout verified end-to-end — query web developer /
+  Patna returned 5 real leads (Indeed: 21 fresher jobs in Patna; LinkedIn,
+  Glassdoor, PlacementIndia, SimplyHired) in ~15s. Two lessons: (1) ddgs
+  default backend times out (mojeek) — search chain is Tavily (if key) →
+  ddgs/duckduckgo → ddgs/bing, 2 attempts each (`scout/search.py`);
+  (2) httpx's default 5s timeout kills agent calls — clients must set a
+  long timeout (300s in `scout/test_client.py`; Coordinator must too).
+  Results are job-board listing pages, not parsed individual postings —
+  that is the honest scope of Scout v1.
 
 ## Day-wise plan (~2–3 hrs/day)
 

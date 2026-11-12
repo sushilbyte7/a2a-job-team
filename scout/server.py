@@ -9,6 +9,8 @@ or plain text like "web developer fresher jobs in Patna".
 
 from __future__ import annotations
 
+import asyncio
+
 import uvicorn
 from starlette.applications import Starlette
 
@@ -49,7 +51,8 @@ class ScoutAgentExecutor(AgentExecutor):
         )
         try:
             role, location = parse_request(get_message_text(context.message) or "")
-            result = run_scout(role, location, max_results=5)
+            # run_scout is sync and search takes 10-30s: keep it off the loop.
+            result = await asyncio.to_thread(run_scout, role, location, 5)
             payload = result.model_dump_json(indent=2)
         except Exception as exc:
             payload = f"Scout failed: {exc}"
