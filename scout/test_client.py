@@ -22,7 +22,7 @@ QUERY = sys.argv[1] if len(sys.argv) > 1 else '{"role": "web developer", "locati
 async def main() -> None:
     # One shared client with trust_env=False: localhost must bypass any
     # system proxy vars (httpx otherwise chokes parsing NO_PROXY entries
-    # in sandboxed shells). Same gotcha as PLAN.md notes for Day 1.
+    # in sandboxed shells). Same gotcha the Day 1 hello client hit.
     # Long timeout: the default httpx 5s is far too short — a live job
     # search with retries takes 10-60s. The Coordinator (Day 4) needs
     # the same treatment.

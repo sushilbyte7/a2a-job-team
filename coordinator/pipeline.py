@@ -162,7 +162,7 @@ async def run_pipeline(role: str, location: str) -> AsyncIterator[dict[str, Any]
 
     # One shared client: trust_env=False so localhost bypasses system proxy
     # vars, and a 300s timeout — Scout's live search plus Scribe's Gemini
-    # call take far longer than httpx's 5s default (PLAN.md, Day 2 lesson).
+    # call take far longer than httpx's 5s default.
     async with httpx.AsyncClient(trust_env=False, timeout=300.0) as httpx_client:
         yield event("scout", "discovering", {"url": SCOUT_URL})
         try:

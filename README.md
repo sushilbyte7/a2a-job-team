@@ -64,30 +64,6 @@ instead of calling Gemini, so the whole pipeline still runs end to end.
 ₹0. Gemini free tier + Tavily free tier (optional — Scout falls back to
 `ddgs`, which needs no key) + everything runs locally.
 
-## Status
-
-- [x] Day 1 — A2A plumbing verified: card discovery, non-streaming + streaming
-      send on `a2a-sdk==1.3.0` (see `day1-hello/`)
-- [x] Day 2 — Scout (LangGraph job researcher) — verified live 12 Nov 2026:
-      card discovery + find_jobs returned 5 structured Patna listings (see `scout/`)
-- [x] Day 3 — Scribe (Gemini application writer) — verified live 12 Nov 2026:
-      card discovery + tailor_application returned 3 tailored bullets + cover
-      note for a Scout lead (see `scribe/`). Set `SCRIBE_DRY_RUN=1` for a
-      no-LLM template tailoring.
-- [x] Day 4 — Coordinator (discovery + delegation pipeline) — verified live
-      12 Nov 2026: POST /run and GET /stream both ran Scout → Scribe
-      end-to-end, 5 jobs + tailored application with a 9-event trace
-      (see `coordinator/`)
-- [x] Day 5 — Trace UI (React + SSE) — verified live 12 Nov 2026: Vite dev
-      server on :5173 served the page, /api proxy reached the Coordinator,
-      and a full stream run delivered all 9 trace events + 5 jobs +
-      3 bullets (see `ui/`)
-- [x] Day 6 — Hardening: Scout retry on transient search failures, /health
-      endpoint + UI status dots, pinned dependencies, demo script
-- [x] Day 7 — Ship — code complete, 8 commits on main
-
-Full plan: [`PLAN.md`](PLAN.md)
-
 ## Honest limitations
 
 - **Demo, not a product.** Nothing is applied for — Scout searches, Scribe
