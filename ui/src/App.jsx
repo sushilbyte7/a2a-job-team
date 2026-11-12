@@ -23,6 +23,8 @@ function describeEvent(evt) {
       if (d.jobs !== undefined)
         return `found ${d.jobs} jobs — top: "${d.top_job?.title}" @ ${d.top_job?.company}`
       return `wrote ${d.bullets} bullets (${d.model})`
+    case 'retrying':
+      return `attempt ${d.attempt} in ${d.delay_seconds}s — ${d.error}`
     case 'failed':
       return d.error || 'failed'
     default:
@@ -39,18 +41,36 @@ export default function App() {
   const [error, setError] = useState(null)
   const [elapsed, setElapsed] = useState(null)
   const [copied, setCopied] = useState(false)
+  const [health, setHealth] = useState({ scout: null, scribe: null })
   const feedRef = useRef(null)
   const sourceRef = useRef(null)
   const startRef = useRef(null)
+
+  async function checkHealth() {
+    try {
+      const res = await fetch('/api/health')
+      const data = await res.json()
+      setHealth({
+        scout: data.agents?.scout?.status || 'down',
+        scribe: data.agents?.scribe?.status || 'down',
+      })
+    } catch {
+      setHealth({ scout: 'down', scribe: 'down' })
+    }
+  }
 
   useEffect(() => {
     feedRef.current?.scrollTo({ top: feedRef.current.scrollHeight })
   }, [events])
 
-  useEffect(() => () => sourceRef.current?.close(), [])
+  useEffect(() => {
+    checkHealth()
+    return () => sourceRef.current?.close()
+  }, [])
 
   function run() {
     if (running) return
+    checkHealth()
     sourceRef.current?.close()
     setEvents([])
     setResult(null)
@@ -133,6 +153,27 @@ export default function App() {
         <p className="subtitle">
           Two agents, two frameworks, one protocol — Scout (LangGraph) finds the
           jobs, Scribe (plain Python + Gemini) writes the application.
+        </p>
+        <p className="health">
+          {['scout', 'scribe'].map((agent) => (
+            <span key={agent} className="health-item">
+              <span
+                className="health-dot"
+                style={{
+                  background:
+                    health[agent] === 'ok'
+                      ? '#4ade80'
+                      : health[agent] === 'down'
+                        ? '#e32b3c'
+                        : '#5d6675',
+                }}
+              />
+              {agent} {health[agent] === 'ok' ? 'online' : health[agent] === 'down' ? 'offline' : '…'}
+            </span>
+          ))}
+          {health.scout === 'down' || health.scribe === 'down' ? (
+            <span className="health-hint"> — start the missing server (see README) before running.</span>
+          ) : null}
         </p>
       </header>
 

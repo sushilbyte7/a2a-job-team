@@ -4,7 +4,9 @@ Run (with scout/server.py on :10001 and scribe/server.py on :10002):
   python -m coordinator.server
 
 Endpoints:
-  GET  /                        health + agent URLs
+  GET  /                        service info + agent URLs
+  GET  /health                  probes both Agent Cards, reports per-agent
+                                ok/down — the UI shows this before a run
   POST /run                     {"role": ..., "location": ...} -> full result
                                 + trace as one JSON document
   GET  /stream?role=..&location=..   same run as a server-sent event stream
@@ -23,7 +25,7 @@ from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from .pipeline import SCOUT_URL, SCRIBE_URL, run_pipeline, run_pipeline_sync
+from .pipeline import SCOUT_URL, SCRIBE_URL, check_agents, run_pipeline, run_pipeline_sync
 
 app = FastAPI(title="A2A Job Team — Coordinator")
 
@@ -34,12 +36,22 @@ class RunRequest(BaseModel):
 
 
 @app.get("/")
-def health() -> dict:
+def info() -> dict:
     return {
         "service": "coordinator",
         "status": "ok",
         "scout_url": SCOUT_URL,
         "scribe_url": SCRIBE_URL,
+    }
+
+
+@app.get("/health")
+async def health() -> dict:
+    agents = await check_agents()
+    return {
+        "coordinator": "ok",
+        "agents": agents,
+        "all_ok": all(a["status"] == "ok" for a in agents.values()),
     }
 
 

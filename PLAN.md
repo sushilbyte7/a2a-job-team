@@ -155,11 +155,26 @@ Ports: Scout 10001, Scribe 10002, Coordinator 8000, UI 5173.
   only — 127.0.0.1 health checks then fail. Pin `host: '127.0.0.1'` in
   vite.config.js.
 
-### Day 6 — Hardening
+### Day 6 — Hardening ✅ DONE (verified here, 12 Nov 2026)
 - Timeouts, retries with backoff (Gemini free-tier rate limits), clear
   errors when a key is missing, `profile.md` filled with real data.
 - README with architecture, setup, demo GIF/video, honest limitations
   (local-only, free-tier limits, no real applications sent).
+- Done: Coordinator retries the Scout task once (5s delay, `retrying`
+  trace event) — covers the ddgs flake that killed a Day 4 run; note
+  Scout reports failures as artifact text, not exceptions, so the retry
+  checks the payload, not just the transport. Scribe has no coordinator
+  retry (it retries Gemini internally; a second attempt would re-spend a
+  full call). New GET /health probes both Agent Cards (5s timeout) and
+  the UI shows green/red status dots for both agents. requirements.txt
+  pinned to the verified set. README rewritten (architecture, quickstart,
+  honest limitations, troubleshooting table). demo/ has a 60-second
+  recording script, start-all.sh/.bat + stop-all.sh.
+- Verified: retry unit test (stubbed Scout fails once with the exact ddgs
+  text, then succeeds → `retrying` event, 5 jobs + 3 bullets); full live
+  run again clean (9 events, 5 jobs, 3 bullets); /health correct both
+  ways (all_ok true with agents up, both down with clear errors when
+  stopped); UI build clean.
 
 ### Day 7 — Ship
 - Push to GitHub (`a2a-job-team`), LinkedIn Post 1 about the build:

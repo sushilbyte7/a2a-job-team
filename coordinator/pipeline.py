@@ -18,6 +18,7 @@ Env:
 
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 from datetime import datetime, timezone
@@ -31,6 +32,14 @@ from a2a.types import Role, SendMessageRequest, TaskState
 
 SCOUT_URL = os.environ.get("SCOUT_URL", "http://127.0.0.1:10001")
 SCRIBE_URL = os.environ.get("SCRIBE_URL", "http://127.0.0.1:10002")
+
+# Day 6 hardening: ddgs (Scout's free search backend) flakes — on 12 Nov 2026
+# a run died mid-demo with "No results found" on all backends, then worked on
+# retry. One Scout retry, 5s later, covers that. Scribe gets no coordinator
+# retry: it already retries Gemini 429/503 internally, and a second attempt
+# would spend a whole extra Gemini call.
+SCOUT_MAX_ATTEMPTS = 2
+SCOUT_RETRY_DELAY_SECONDS = 5
 
 
 def _now() -> str:
@@ -168,17 +177,35 @@ async def run_pipeline(role: str, location: str) -> AsyncIterator[dict[str, Any]
             return
         yield event("scout", "discovered", scout_info)
         yield event("scout", "task_sent", {"role": role, "location": location})
-        try:
-            scout_text = await _send_task(
-                httpx_client, scout_card, "Scout",
-                json.dumps({"role": role, "location": location}),
-            )
-        except Exception as exc:
-            yield event("scout", "failed", {"error": str(exc)})
+        scout_text = None
+        last_error = ""
+        for attempt in range(1, SCOUT_MAX_ATTEMPTS + 1):
+            try:
+                text = await _send_task(
+                    httpx_client, scout_card, "Scout",
+                    json.dumps({"role": role, "location": location}),
+                )
+            except Exception as exc:  # noqa: BLE001 — transient failures are retryable
+                text, last_error = None, str(exc)
+            # Scout reports its own failures as plain text ("Scout failed:
+            # ...") instead of raising — that is a retryable failure too.
+            if text is not None and not text.strip().startswith("Scout failed:"):
+                scout_text = text
+                break
+            last_error = (text or last_error or "empty result").strip()[:300]
+            if attempt < SCOUT_MAX_ATTEMPTS:
+                yield event("scout", "retrying", {
+                    "attempt": attempt + 1,
+                    "error": last_error[:200],
+                    "delay_seconds": SCOUT_RETRY_DELAY_SECONDS,
+                })
+                await asyncio.sleep(SCOUT_RETRY_DELAY_SECONDS)
+        if scout_text is None:
+            yield event("scout", "failed", {"error": last_error})
             yield event("coordinator", "result", {
                 "role": role, "location": location, "jobs": [],
                 "top_job": None, "application": None,
-                "error": f"Scout failed: {exc}",
+                "error": last_error if last_error.startswith("Scout failed") else f"Scout failed: {last_error}",
             })
             return
         try:
@@ -269,3 +296,17 @@ async def run_pipeline_sync(role: str, location: str) -> dict[str, Any]:
         else:
             trace.append(evt)
     return {"trace": trace, "result": result}
+
+
+async def check_agents() -> dict[str, dict[str, Any]]:
+    """Probe both Agent Cards with a short timeout. Powers GET /health and
+    the UI's status dots, so a missing server is obvious before a run."""
+    statuses: dict[str, dict[str, Any]] = {}
+    async with httpx.AsyncClient(trust_env=False, timeout=5.0) as client:
+        for name, url in (("scout", SCOUT_URL), ("scribe", SCRIBE_URL)):
+            try:
+                _, info = await _discover(client, url)
+                statuses[name] = {"status": "ok", "url": url, **info}
+            except Exception as exc:  # noqa: BLE001 — any failure means "down" here
+                statuses[name] = {"status": "down", "url": url, "error": str(exc)[:200]}
+    return statuses

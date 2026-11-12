@@ -17,6 +17,17 @@ body { margin: 0; }
 header h1 { margin: 0 0 8px; font-size: 28px; }
 .subtitle { margin: 0; color: #9aa3b2; line-height: 1.5; }
 
+.health { margin: 12px 0 0; font-size: 13px; color: #9aa3b2; }
+.health-item { margin-right: 16px; }
+.health-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.health-hint { color: #ffb4b8; }
+
 .run-form {
   display: flex;
   gap: 12px;

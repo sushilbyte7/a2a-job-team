@@ -1,21 +1,23 @@
-# A2A Job Team — pinned where it matters, loose elsewhere.
+# A2A Job Team — all versions pinned to the set verified live on 12 Nov 2026.
 # Python 3.10+ required (3.12 used for verification).
 
-# Protocol — PINNED. 1.3.0 verified working (card discovery, streaming + non-
-# streaming send). Do NOT use 1.0.2 (known /message:send 500 with protobuf 7.x)
-# and do NOT pin protobuf<5.0 (that resolves the old 0.2.x SDK line).
+# Protocol — PINNED. 1.3.0 verified working (card discovery, streaming +
+# non-streaming send). Do NOT use 1.0.2 (known /message:send 500 with
+# protobuf 7.x) and do NOT pin protobuf<5.0 (that resolves the old 0.2.x
+# SDK line).
 a2a-sdk[http-server]==1.3.0
+protobuf==7.36.2
 
 # Servers
-uvicorn
-starlette
-fastapi
-httpx
+uvicorn==0.54.0
+starlette==1.10.0
+fastapi==0.162.5
+httpx==0.28.1
 
-# LLM + search (Day 2-3)
-google-genai
-langgraph
-tavily-python
-ddgs
-pydantic
-python-dotenv
+# LLM + search
+google-genai==3.2.0
+langgraph==1.2.20
+tavily-python==0.8.5
+ddgs==9.16.1
+pydantic==2.14.3
+python-dotenv==1.2.4
