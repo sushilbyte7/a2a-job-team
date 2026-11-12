@@ -31,12 +31,4 @@ the trace tells the story. Record at 1080p, browser window full screen.
 - **Gemini 429** — Scribe retries internally; the run just takes longer.
   If it persists, wait a minute (free-tier quota resets quickly).
 
-## Caption draft (for the LinkedIn post)
 
-> Every AI agent today works alone. I built two that talk to each other.
->
-> Scout (LangGraph) finds fresher jobs. Scribe (plain Python + Gemini)
-> writes the application. Neither knows the other exists — they discover
-> each other through Agent Cards and collaborate over the A2A protocol.
->
-> This is the 60-second demo. Full code in the repo.

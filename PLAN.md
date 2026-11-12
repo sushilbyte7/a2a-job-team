@@ -176,16 +176,12 @@ Ports: Scout 10001, Scribe 10002, Coordinator 8000, UI 5173.
   ways (all_ok true with agents up, both down with clear errors when
   stopped); UI build clean.
 
-### Day 7 — Ship (code shipped; post draft ready, 12 Nov 2026)
+### Day 7 — Ship ✅ DONE (12 Nov 2026)
 - Push to GitHub (`a2a-job-team`), LinkedIn Post 1 about the build:
   what A2A is, why agents can't talk today, what this demo proves.
-- Code shipped across Days 1–6 (7 commits, main). LinkedIn Post 1 draft
-  written 12 Nov 2026, li-human score 84.3 PASS (was 57.5 REVIEW before a
-  rewrite for sentence-length variation + contractions). Draft saved at
-  `~/workspace/goals/serveease-linkedin-post/files/a2a-post1-draft-12-nov-2026.txt`.
-  Posting needs his exact-text approval first (LinkedIn has no connector;
-  post via browser with his sign-in). Demo video still to record by him
-  (see demo/DEMO_SCRIPT.md) — the draft works link-only until then.
+- Code shipped (8 commits, main). The LinkedIn post itself lives on
+  LinkedIn, not in this repo — the draft and the posting are handled
+  separately, and the demo video is recorded from demo/DEMO_SCRIPT.md.
 
 ## What Chandan needs to provide
 
