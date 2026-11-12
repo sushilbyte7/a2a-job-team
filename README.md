@@ -34,7 +34,10 @@ User → React trace UI → Coordinator (FastAPI + A2A client)
       card discovery + tailor_application returned 3 tailored bullets + cover
       note for a Scout lead (see `scribe/`). Set `SCRIBE_DRY_RUN=1` for a
       no-LLM template tailoring.
-- [ ] Day 4 — Coordinator (discovery + delegation pipeline)
+- [x] Day 4 — Coordinator (discovery + delegation pipeline) — verified live
+      12 Nov 2026: POST /run and GET /stream both ran Scout → Scribe
+      end-to-end, 5 jobs + tailored application with a 9-event trace
+      (see `coordinator/`)
 - [ ] Day 5 — Trace UI (React + SSE)
 - [ ] Day 6 — Hardening + demo recording
 - [ ] Day 7 — Ship + LinkedIn post

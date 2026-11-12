@@ -119,10 +119,25 @@ Ports: Scout 10001, Scribe 10002, Coordinator 8000, UI 5173.
   was 503 (high demand). `gemini-3.5-flash` and `gemini-3.6-flash` answered
   instantly — default is `gemini-3.5-flash`, overridable via `GEMINI_MODEL`.
 
-### Day 4 — Coordinator (discovery + delegation)
+### Day 4 — Coordinator (discovery + delegation) ✅ DONE (verified here, 12 Nov 2026)
 - FastAPI service on :8000. Discovers both cards, runs the pipeline
   Scout → Scribe, returns combined result + full task trace as JSON.
 - CLI end-to-end demo works before any UI exists.
+- Files: `coordinator/pipeline.py` (async-generator pipeline yielding trace
+  events, ending in a `result` event; per-agent discovery + send split so
+  the trace order is discovering → discovered → task_sent → completed),
+  `coordinator/server.py` (GET / health, POST /run one-shot JSON,
+  GET /stream SSE — the Day 5 UI consumes the stream),
+  `coordinator/test_client.py` (POST + `--stream` modes).
+- Verified: POST /run returned 5 jobs + 3 tailored bullets + cover note
+  (gemini-3.5-flash) with a 9-event trace; GET /stream streamed the same
+  9 events live. Failure paths verified too: a transient ddgs outage
+  surfaced as a clean `scout failed` event + error in the result.
+- Gotcha (12 Nov 2026): with streaming=False, `send_message` yields a
+  `StreamResponse` proto whose oneof holds the Task at `.task` — reading
+  `.artifacts` off the chunk returns nothing. `pipeline.py` unwraps with
+  `HasField("task")`; task state is an int, compare with
+  `int(TaskState.TASK_STATE_COMPLETED)`.
 
 ### Day 5 — Trace UI (React + Vite)
 - One page: role/location form → live event feed (SSE from Coordinator) →
