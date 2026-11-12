@@ -71,12 +71,27 @@ Ports: Scout 10001, Scribe 10002, Coordinator 8000, UI 5173.
 - Run: `python day1-hello/echo_server.py`, then
   `python day1-hello/echo_client.py` in a second terminal.
 
-### Day 2 — Scout (job researcher, LangGraph)
+### Day 2 — Scout (job researcher, LangGraph) ✅ DONE (verified here, 12 Nov 2026)
 - LangGraph agent: query → Tavily search → filter (fresher, role, location,
   posted recently) → structured output (Pydantic: title, company, location,
   link, why-it-fits).
 - Wrap in `AgentExecutor`, serve on :10001 with skill `find_jobs`.
 - Test with a small client script before moving on.
+- Files: `scout/agent.py` (LangGraph search→filter graph + deterministic
+  fresher/senior scoring), `scout/search.py` (Tavily when key set, else ddgs),
+  `scout/models.py` (JobPosting/ScoutResult), `scout/server.py` (:10001),
+  `scout/test_client.py`.
+- Verified: filter unit test (senior listing rejected, 2 fresher kept);
+  live A2A round-trip — card discovery + `find_jobs` for
+  web developer / Patna returned 5 structured jobs via ddgs
+  (Shine, Indeed, PlacementIndia, LinkedIn, SimplyHired).
+- Honest limit: ddgs returns job-board search pages, not single postings.
+  Tavily (optional free key) may return individual listings; revisit Day 6.
+- Gotcha fixed in `scout/test_client.py`: `create_client` needs the same
+  `trust_env=False` httpx client as the resolver, else system proxy vars
+  break localhost calls (httpx InvalidURL). Day 1 `echo_client.py` has the
+  same latent bug — fix it the same way if it fails in a sandboxed shell.
+- Run: `python -m scout.server`, then `python -m scout.test_client`.
 
 ### Day 3 — Scribe (application writer, plain Python + Gemini)
 - Input: one job + `profile.md` (his real skills, projects, education).

@@ -28,7 +28,8 @@ User → React trace UI → Coordinator (FastAPI + A2A client)
 
 - [x] Day 1 — A2A plumbing verified: card discovery, non-streaming + streaming
       send on `a2a-sdk==1.3.0` (see `day1-hello/`)
-- [ ] Day 2 — Scout (LangGraph job researcher)
+- [x] Day 2 — Scout (LangGraph job researcher) — verified live 12 Nov 2026:
+      card discovery + find_jobs returned 5 structured Patna listings (see `scout/`)
 - [ ] Day 3 — Scribe (Gemini application writer)
 - [ ] Day 4 — Coordinator (discovery + delegation pipeline)
 - [ ] Day 5 — Trace UI (React + SSE)
