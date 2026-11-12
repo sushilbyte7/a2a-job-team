@@ -84,7 +84,7 @@ instead of calling Gemini, so the whole pipeline still runs end to end.
       3 bullets (see `ui/`)
 - [x] Day 6 — Hardening: Scout retry on transient search failures, /health
       endpoint + UI status dots, pinned dependencies, demo script
-- [ ] Day 7 — Ship + LinkedIn post
+- [x] Day 7 — Ship — code complete, 8 commits on main
 
 Full plan: [`PLAN.md`](PLAN.md)
 

@@ -1,6 +1,6 @@
 # Demo recording script (30–60 seconds)
 
-The LinkedIn demo: one screen capture of a full run. No voiceover needed —
+The demo: one screen capture of a full run. No voiceover needed —
 the trace tells the story. Record at 1080p, browser window full screen.
 
 ## Before you record
