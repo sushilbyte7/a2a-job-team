@@ -177,11 +177,8 @@ Ports: Scout 10001, Scribe 10002, Coordinator 8000, UI 5173.
   stopped); UI build clean.
 
 ### Day 7 — Ship ✅ DONE (12 Nov 2026)
-- Push to GitHub (`a2a-job-team`), LinkedIn Post 1 about the build:
-  what A2A is, why agents can't talk today, what this demo proves.
-- Code shipped (8 commits, main). The LinkedIn post itself lives on
-  LinkedIn, not in this repo — the draft and the posting are handled
-  separately, and the demo video is recorded from demo/DEMO_SCRIPT.md.
+- Push to GitHub (`a2a-job-team`). Code shipped (8 commits, main).
+- Demo video recorded from demo/DEMO_SCRIPT.md.
 
 ## What Chandan needs to provide
 
