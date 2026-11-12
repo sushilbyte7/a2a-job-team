@@ -102,11 +102,22 @@ Ports: Scout 10001, Scribe 10002, Coordinator 8000, UI 5173.
   same latent bug — fix it the same way if it fails in a sandboxed shell.
 - Run: `python -m scout.server`, then `python -m scout.test_client`.
 
-### Day 3 — Scribe (application writer, plain Python + Gemini)
+### Day 3 — Scribe (application writer, plain Python + Gemini) ✅ DONE (verified here, 12 Nov 2026)
 - Input: one job + `profile.md` (his real skills, projects, education).
 - Output: 3 tailored resume bullets + short cover note. No invented
   experience — the prompt must forbid it (fresher, no job history).
 - Serve on :10002 with skill `tailor_application`.
+- Files: `scribe/agent.py` (prompt + Gemini call with retries, JSON parse
+  with fallback, `SCRIBE_DRY_RUN=1` template mode), `scribe/models.py`
+  (TailorRequest/TailoredApplication), `scribe/profile.md` (verified real
+  history only), `scribe/server.py` (:10002), `scribe/test_client.py`.
+- Verified: card discovery + live A2A round-trip; Gemini tailoring from a
+  Scout lead (Indeed web-developer fresher, Patna).
+- Model note (12 Nov 2026, swept live with his key): `gemini-2.5-flash` and
+  `gemini-2.5-flash-lite` return 404 ("no longer available to new users");
+  `gemini-3.7-flash` / `gemini-3.8-flash` timed out and `gemini-flash-latest`
+  was 503 (high demand). `gemini-3.5-flash` and `gemini-3.6-flash` answered
+  instantly — default is `gemini-3.5-flash`, overridable via `GEMINI_MODEL`.
 
 ### Day 4 — Coordinator (discovery + delegation)
 - FastAPI service on :8000. Discovers both cards, runs the pipeline

@@ -30,7 +30,10 @@ User → React trace UI → Coordinator (FastAPI + A2A client)
       send on `a2a-sdk==1.3.0` (see `day1-hello/`)
 - [x] Day 2 — Scout (LangGraph job researcher) — verified live 12 Nov 2026:
       card discovery + find_jobs returned 5 structured Patna listings (see `scout/`)
-- [ ] Day 3 — Scribe (Gemini application writer)
+- [x] Day 3 — Scribe (Gemini application writer) — verified live 12 Nov 2026:
+      card discovery + tailor_application returned 3 tailored bullets + cover
+      note for a Scout lead (see `scribe/`). Set `SCRIBE_DRY_RUN=1` for a
+      no-LLM template tailoring.
 - [ ] Day 4 — Coordinator (discovery + delegation pipeline)
 - [ ] Day 5 — Trace UI (React + SSE)
 - [ ] Day 6 — Hardening + demo recording
