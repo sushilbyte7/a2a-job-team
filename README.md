@@ -38,7 +38,10 @@ User → React trace UI → Coordinator (FastAPI + A2A client)
       12 Nov 2026: POST /run and GET /stream both ran Scout → Scribe
       end-to-end, 5 jobs + tailored application with a 9-event trace
       (see `coordinator/`)
-- [ ] Day 5 — Trace UI (React + SSE)
+- [x] Day 5 — Trace UI (React + SSE) — verified live 12 Nov 2026: Vite dev
+      server on :5173 served the page, /api proxy reached the Coordinator,
+      and a full stream run delivered all 9 trace events + 5 jobs +
+      3 bullets (see `ui/`)
 - [ ] Day 6 — Hardening + demo recording
 - [ ] Day 7 — Ship + LinkedIn post
 

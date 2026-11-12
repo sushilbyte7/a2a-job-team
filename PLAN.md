@@ -139,10 +139,21 @@ Ports: Scout 10001, Scribe 10002, Coordinator 8000, UI 5173.
   `HasField("task")`; task state is an int, compare with
   `int(TaskState.TASK_STATE_COMPLETED)`.
 
-### Day 5 — Trace UI (React + Vite)
+### Day 5 — Trace UI (React + Vite) ✅ DONE (verified here, 12 Nov 2026)
 - One page: role/location form → live event feed (SSE from Coordinator) →
   job cards → tailored application text, copy button.
 - This is the LinkedIn demo: record a 30-second screen capture of a run.
+- Files: `ui/` — package.json (React 19 + Vite 6), vite.config.js
+  (`/api` proxy → Coordinator :8000, host pinned to 127.0.0.1),
+  index.html, src/main.jsx, src/App.jsx (EventSource stream, auto-scroll
+  feed, job cards with top-pick badge, copy-all button with clipboard
+  fallback), src/App.css (dark console theme), README.md.
+- Verified: `npm run build` clean (29 modules, 1.7s); dev server on :5173
+  served the page, the /api proxy reached Coordinator health, and a full
+  /api/stream run delivered all 9 trace events + 5 jobs + 3 bullets.
+- Gotcha: Vite binds `localhost` by default, which can resolve to IPv6
+  only — 127.0.0.1 health checks then fail. Pin `host: '127.0.0.1'` in
+  vite.config.js.
 
 ### Day 6 — Hardening
 - Timeouts, retries with backoff (Gemini free-tier rate limits), clear
